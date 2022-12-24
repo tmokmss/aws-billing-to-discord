@@ -47,6 +47,12 @@ Sends daily breakdowns of AWS costs to a Slack channel.
     serverless invoke --function report_cost --stage="prod" --param="slack_url=https://hooks.slack.com/services/xxx/yyy/zzzz"
     ```
 
+    When using with AWS Identity Center (successor to AWS SSO), set environment variable `AWS_SDK_LOAD_CONFIG` to `1`.
+
+    ```
+    export AWS_SDK_LOAD_CONFIG=1
+    ```
+
 ## Support for AWS Credits
 
 If you have AWS credits on your account and want to see them taken into account on this report, head to [your billing dashboard](https://console.aws.amazon.com/billing/home?#/credits) and note down the "Expiration Date", "Amount Remaining", and the "as of" date towards the bottom of the page. Add all three of these items to the command line when executing the `deploy` or `invoke`:

@@ -2,6 +2,7 @@ service: aws-billing-to-slack
 
 plugins:
   - serverless-python-requirements
+  - serverless-better-credentials
 package:
   exclude:
     - node_modules/**
