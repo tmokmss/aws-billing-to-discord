@@ -3,7 +3,6 @@ import boto3
 import datetime
 import os
 import requests
-import sys
 
 n_days = 7
 yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
@@ -57,6 +56,10 @@ def lambda_handler(event, context):
     teams_hook_url = os.environ.get('TEAMS_WEBHOOK_URL')
     if teams_hook_url:
         publish_teams(teams_hook_url, summary, buffer)
+
+    discord_hook_url = os.environ.get('DISCORD_WEBHOOK_URL')
+    if discord_hook_url:
+        publish_discord(discord_hook_url, summary, buffer)
 
 
 def report_cost(group_by: str = "SERVICE", length: int = 5, result: dict = None, yesterday: str = None, new_method=True):
@@ -239,6 +242,19 @@ def publish_teams(hook_url, summary, buffer):
     )
 
     if resp.status_code != 200:
+        print("HTTP %s: %s" % (resp.status_code, resp.text))
+
+
+def publish_discord(hook_url, summary, buffer):
+
+    resp = requests.post(
+        hook_url,
+        json={
+            "content": summary + "\n\n```\n" + buffer + "\n```",
+        }
+    )
+
+    if resp.status_code != 204:
         print("HTTP %s: %s" % (resp.status_code, resp.text))
 
 
